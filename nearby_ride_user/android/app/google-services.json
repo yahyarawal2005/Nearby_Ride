@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "795193994168",
+    "project_id": "nearbylocation-10c7d",
+    "storage_bucket": "nearbylocation-10c7d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:795193994168:android:93d95b93686b81c4eebd4d",
+        "android_client_info": {
+          "package_name": "com.example.nearby_ride_user"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLiXCdU4kF_46u_3Ss9EuXC8NAXTpzARc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:795193994168:android:75e5abbc87456027eebd4d",
+        "android_client_info": {
+          "package_name": "com.example.nearbyride"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLiXCdU4kF_46u_3Ss9EuXC8NAXTpzARc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
