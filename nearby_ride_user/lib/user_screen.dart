@@ -24,8 +24,8 @@ class UserScreenState extends State<UserScreen> {
   Timer? _userUpdateTimer;
   StreamSubscription? _driversSubscription;
 
-  String _searchText = "";
   String _userName = ""; // store user name
+  Set<String> _selectedVehicleTypes = {};
 
   @override
   void initState() {
@@ -167,6 +167,27 @@ class UserScreenState extends State<UserScreen> {
     });
   }
 
+  Widget _buildVehicleCheckbox(String title, String vehicleType) {
+    return Column(
+      children: [
+        Checkbox(
+          value: _selectedVehicleTypes.contains(vehicleType),
+          onChanged: (bool? value) {
+            setState(() {
+              if (value == true) {
+                _selectedVehicleTypes.add(vehicleType);
+              } else {
+                _selectedVehicleTypes.remove(vehicleType);
+              }
+            });
+            _listenToDrivers(); // Re-filter drivers based on selection
+          },
+        ),
+        Text(title),
+      ],
+    );
+  }
+
   void _listenToDrivers() {
     _driversSubscription?.cancel();
 
@@ -188,8 +209,12 @@ class UserScreenState extends State<UserScreen> {
         final phone = data["phone"] ?? "N/A";
 
         if (driverLat == null || driverLng == null) continue;
-        if (_searchText.isNotEmpty && type != _searchText.toLowerCase())
+
+        // Filter based on selected vehicle types
+        if (_selectedVehicleTypes.isNotEmpty &&
+            !_selectedVehicleTypes.contains(type)) {
           continue;
+        }
 
         double distanceInMeters = Geolocator.distanceBetween(
           _currentPosition!.latitude,
@@ -351,30 +376,6 @@ class UserScreenState extends State<UserScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: TextField(
-                                decoration: InputDecoration(
-                                  hintText:
-                                      "Search vehicle (car, bus, rickshaw)",
-                                  prefixIcon: const Icon(Icons.search),
-                                  filled: true,
-                                  fillColor: Colors.grey.shade200,
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      vertical: 0, horizontal: 16),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                ),
-                                onChanged: (value) {
-                                  setState(() {
-                                    _searchText = value.trim().toLowerCase();
-                                  });
-                                  _listenToDrivers();
-                                },
-                              ),
-                            ),
                             Expanded(
                               child: GoogleMap(
                                 initialCameraPosition: CameraPosition(
@@ -388,6 +389,20 @@ class UserScreenState extends State<UserScreen> {
                                 compassEnabled: true,
                                 myLocationButtonEnabled: true,
                                 myLocationEnabled: true,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0, vertical: 8.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  _buildVehicleCheckbox("Car", "car"),
+                                  _buildVehicleCheckbox("Bus", "bus"),
+                                  _buildVehicleCheckbox(
+                                      "Autorickshaw", "rickshaw"),
+                                ],
                               ),
                             ),
                             Padding(
